@@ -1,0 +1,59 @@
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100%;
+  background: #2d2d2d;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  z-index: 1000;
+}
+
+
+.sidebar {
+  width: 220px;
+  background-color: #1e1e1e;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  color: white;
+  box-shadow: 3px 0 6px rgba(0,0,0,0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+    flex-direction: column;
+  justify-content: space-between; /* empuja el último botón hacia abajo */
+  height: 100vh;
+}
+
+.sidebar button {
+  background-color:#1e1e1e;
+  color: white;
+  border: none;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+   flex-direction: column;
+}
+
+.sidebar button:hover {
+  background-color: #555;
+}
+
+.sidebar button.active {
+  background-color: #ffffff;
+  color: black;
+  font-weight: bold;
+  box-shadow: 0 0 8px #ffffff;
+}
+
+
+.sidebar-bottom {
+  padding: 20px 0;
+}
