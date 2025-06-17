@@ -1,6 +1,7 @@
 // App.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Sidebar, CorteForm, AdelantoModal, HistorialAdelantos, InventarioProductos, ModalAgregarProducto, ModalEliminarProducto, ModalEditarProducto, VentasProductos, ResumenBarberos } from './components/index.js';
+import {postAdvance} from '../src/api.js'
 
 
 function App() {
@@ -99,10 +100,15 @@ function App() {
       {modalVisible && (
         <AdelantoModal
           onClose={() => setModalVisible(false)}
-          onGuardar={(adelanto) => {
+          onGuardar={async(adelanto) => {
+            try {
+            await postAdvance(adelanto)
             console.log("Adelanto guardado:", adelanto);
-            // lógica para guardar el adelanto en la base de datos
+          } catch (error){
+            alert("Error al guardar el adelanto.");
+            console.error(error);
           }}
+          }
         />
       )}
 

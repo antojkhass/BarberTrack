@@ -1,5 +1,5 @@
 // HistorialAdelantos.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 
 export function HistorialAdelantos() {
   const [filtroDesde, setFiltroDesde] = useState("");
@@ -89,5 +89,3 @@ const filtrados = adelantos
     </>
   );
 }
-
-// export default HistorialAdelantos;

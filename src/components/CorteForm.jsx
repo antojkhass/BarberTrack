@@ -5,10 +5,9 @@ import { fetchEmployees, fetchService, fetchSaleStatus } from "../api";
 export function CorteForm() {
  
 
-  const [metodoPago, setMetodoPago] = useState("Efectivo");
+  const [metodoPago, setMetodoPago] = useState("");
   const [propina, setPropina] = useState("");
-
-  const [barberos, setBarberos] = useState([])
+  const [barberos, setBarberos] = useState([]);
   const [barbero, setBarbero] = useState(""); 
   const [servicio, setServicio] = useState([]);
   const [servicioSeleccionado, setServicioSeleccionado] = useState(""); 
@@ -66,7 +65,7 @@ export function CorteForm() {
     <form onSubmit={handleSubmit}>
       <label htmlFor="barbero">Barbero:</label>
       <select id="barbero" value={barbero} onChange={(e) => setBarbero(e.target.value)} required>
-     <option value="">Selecciona un barbero</option>
+     <option value="">Seleccione un barbero</option>
       {barberos.map((b) => (
       <option key={b.id} value={b.nombre}>{b.nombre}</option>
         ))}
@@ -82,7 +81,7 @@ export function CorteForm() {
 
       <label htmlFor="estadoVenta">Estado de Venta:</label>
       <select id="estadoVenta" value={estadoVentaSeleccionado} onChange={(e) => setEstadoVentaSeleccionado(e.target.value)} required>
-        <option value="">Seleccione el estado:</option>
+        <option value="">Seleccione el estado</option>
             {estadoVenta.map((b) => (
       <option key={b.id} value={b.estado}>{b.estado}</option>
         ))}
@@ -90,6 +89,8 @@ export function CorteForm() {
 
       <label htmlFor="metodoPago">Método de Pago:</label>
       <select id="metodoPago" value={metodoPago} onChange={(e) => setMetodoPago(e.target.value)} required>
+        <option value="">Seleccione el método</option>
+
         <option value="Efectivo">Efectivo</option>
         <option value="Tarjeta">Tarjeta</option>
         <option value="QR">QR</option>

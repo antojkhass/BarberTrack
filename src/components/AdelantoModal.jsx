@@ -1,14 +1,22 @@
-// components/AdelantoModal.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./AdelantoModal.css";
+import { fetchEmployees } from "../api";
 
 export function AdelantoModal({ onClose, onGuardar }) {
   const [barbero, setBarbero] = useState("");
   const [monto, setMonto] = useState("");
   const [motivo, setMotivo] = useState("");
+  const[barberos,setBarberos] = useState([]);
 
-  const barberos = ["Juan", "Pedro", "Marcos", "Luis"]; // ← reemplazá por tus barberos reales
 
+ useEffect(() => {
+  async function cargarBarberos() {
+    const data = await fetchEmployees();
+    setBarberos(data);
+  }
+
+  cargarBarberos();
+}, []);
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -37,9 +45,9 @@ export function AdelantoModal({ onClose, onGuardar }) {
           <label>Barbero:</label>
           <select value={barbero} onChange={(e) => setBarbero(e.target.value)} required>
             <option value="">Seleccionar</option>
-            {barberos.map((nombre) => (
-              <option key={nombre} value={nombre}>
-                {nombre}
+            {barberos.map((barbero) => (
+              <option key={barbero.id} value={barbero.id}>
+                {barbero.nombre}
               </option>
             ))}
           </select>
@@ -69,4 +77,3 @@ export function AdelantoModal({ onClose, onGuardar }) {
   );
 }
 
-// export default AdelantoModal;
