@@ -7,6 +7,7 @@ export const PRODUCT_SALES_API_URL = `${BASE_URL}/productSale`;
 export const ADVANCES_API_URL = `${BASE_URL}/advances`;
 export const SERVICE_API_URL = `${BASE_URL}/services`;
 export const SALE_STATUS_API_URL  = `${BASE_URL}/saleStatus`;
+export const SERVICE_SALES_API_URL = `${BASE_URL}/serviceSale`;
 
 // ---------- EMPLOYEES ----------
 export async function fetchEmployees() {
@@ -196,6 +197,19 @@ export async function updateSaleStatusOfProductSale(saleId, estado_id) {
 
 // ---------- SERVICES ----------
 
+export async function fetchServiceSales() {
+  try {
+    const res = await fetch(SERVICE_SALES_API_URL);
+    if (!res.ok) throw new Error("Error al obtener cortes");
+    return await res.json();
+  } catch (error) {
+    console.error("Error al obtener cortes:", error);
+    return [];
+  }
+}
+
+
+
 export async function fetchService() {
   try {
     const res = await fetch(SERVICE_API_URL);
@@ -281,3 +295,20 @@ export async function deleteSaleStatus(id) {
     console.error("Error al eliminar estado de venta:", error);
   }
 }
+
+// ---------- SERVICE SALES ----------
+export async function postServiceSale(corte) {
+  try {
+    const res = await fetch(SERVICE_SALES_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(corte),
+    });
+    if (!res.ok) throw new Error("Error al registrar corte");
+    return await res.json();
+  } catch (error) {
+    console.error("Error al crear corte:", error);
+    throw error;
+  }
+}
+

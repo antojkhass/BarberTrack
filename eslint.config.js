@@ -30,4 +30,20 @@ export default [
       ],
     },
   },
+
+   {
+    files: ['backend/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.node,            
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'script',       
+      },
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      'no-undef': 'off',                
+    },
+  },
 ]

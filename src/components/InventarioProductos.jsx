@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ModalAgregarProducto } from "./ModalAgregarProducto";
 
 export function InventarioProductos({ setMostrarModalProducto, setMostrarModalEliminar, setMostrarModalEditar  }) {

@@ -1,118 +1,163 @@
-import { useState, useEffect } from "react";
-import { fetchEmployees, fetchService, fetchSaleStatus } from "../api";
-
+// src/components/CorteForm.jsx
+import { useState, useEffect } from 'react';
+import {
+  fetchEmployees,
+  fetchService,
+  fetchSaleStatus,
+  postServiceSale,
+  fetchServiceSales
+} from '../api';
+import { CortesPorBarbero } from './CortesPorBarbero';
 
 export function CorteForm() {
- 
-
-  const [metodoPago, setMetodoPago] = useState("");
-  const [propina, setPropina] = useState("");
   const [barberos, setBarberos] = useState([]);
-  const [barbero, setBarbero] = useState(""); 
-  const [servicio, setServicio] = useState([]);
-  const [servicioSeleccionado, setServicioSeleccionado] = useState(""); 
-  const [estadoVentaSeleccionado, setEstadoVentaSeleccionado] = useState("");
-  const [estadoVenta, setEstadoVenta] = useState([]);
+  const [cortes, setCortes] = useState([]);
+  const [servicios, setServicios] = useState([]);
+  const [estadosVenta, setEstadosVenta] = useState([]);
 
+  // Campos del formulario
+  const [barbero, setBarbero] = useState('');
+  const [servicioSeleccionado, setServicioSeleccionado] = useState('');
+  const [estadoVentaSeleccionado, setEstadoVentaSeleccionado] = useState('');
+  const [metodoPago, setMetodoPago] = useState('');
+  const [propina, setPropina] = useState('');
 
+  // Barbero seleccionado para ver cortes
+  const [selectedBarberoId, setSelectedBarberoId] = useState(null);
 
-
+  // Carga inicial de datos
   useEffect(() => {
-  async function cargarBarberos() {
-    const data = await fetchEmployees();
-    setBarberos(data);
-  }
+    fetchEmployees().then(setBarberos);
+    fetchServiceSales().then(setCortes);
+    fetchService().then(setServicios);
+    fetchSaleStatus().then(setEstadosVenta);
+  }, []);
 
-  cargarBarberos();
-}, []);
-
-  useEffect(() => {
-  async function cargarServicios() {
-    const data = await fetchService();
-    setServicio(data);
-  }
-
-  cargarServicios();
-}, []);
-
-  useEffect(() => {
-  async function cargarEstado() {
-    const data = await fetchSaleStatus();
-    setEstadoVenta(data);
-  }
-
-  cargarEstado();
-}, []);
-
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
+    const precio = servicios.find(s => s.id === servicioSeleccionado)?.price ?? 0;
 
-    console.log("Formulario enviado:");
-    console.log("Barbero:", barberos);
-    console.log("Servicio:", servicio);
-    console.log("Estado de venta:", estadoVenta);
-    console.log("Método de pago:", metodoPago);
-    console.log("Propina:", propina);
+    const nuevoCorte = {
+      employee_id: barbero,
+      service_id: servicioSeleccionado,
+      estado_id: estadoVentaSeleccionado,
+      total: precio,
+      paymentMethod: metodoPago,
+      propina: Number(propina),
+      fecha: new Date().toISOString().split('T')[0],
+    };
+
+    try {
+      await postServiceSale(nuevoCorte);
+      // recargar cortes
+      const fresh = await fetchServiceSales();
+      setCortes(fresh);
+      // opcional: limpiar form
+      setBarbero('');
+      setServicioSeleccionado('');
+      setEstadoVentaSeleccionado('');
+      setMetodoPago('');
+      setPropina('');
+    } catch {
+      alert('No se pudo registrar el corte');
+    }
   };
 
   return (
-    <>
+    <div className="container">
+      <h1>Registrar Corte</h1>
 
-<div className="container">
-    <h1>Registrar Corte</h1>
-   
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="barbero">Barbero:</label>
-      <select id="barbero" value={barbero} onChange={(e) => setBarbero(e.target.value)} required>
-     <option value="">Seleccione un barbero</option>
-      {barberos.map((b) => (
-      <option key={b.id} value={b.nombre}>{b.nombre}</option>
+      <form onSubmit={handleSubmit}>
+        <label>Barbero:</label>
+        <select
+          value={barbero}
+          onChange={e => setBarbero(Number(e.target.value))}
+          required
+        >
+          <option value="">Seleccione un barbero</option>
+          {barberos.map(b => (
+            <option key={b.id} value={b.id}>{b.nombre}</option>
+          ))}
+        </select>
+
+        <label>Servicio:</label>
+        <select
+          value={servicioSeleccionado}
+          onChange={e => setServicioSeleccionado(Number(e.target.value))}
+          required
+        >
+          <option value="">Seleccione un servicio</option>
+          {servicios.map(s => (
+            <option key={s.id} value={s.id}>{s.name}</option>
+          ))}
+        </select>
+
+        <label>Estado de Venta:</label>
+        <select
+          value={estadoVentaSeleccionado}
+          onChange={e => setEstadoVentaSeleccionado(Number(e.target.value))}
+          required
+        >
+          <option value="">Seleccione el estado</option>
+          {estadosVenta.map(st => (
+            <option key={st.id} value={st.id}>{st.estado}</option>
+          ))}
+        </select>
+
+        <label>Método de Pago:</label>
+        <select
+          value={metodoPago}
+          onChange={e => setMetodoPago(e.target.value)}
+          required
+        >
+          <option value="">Seleccione el método</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta</option>
+          <option value="QR">QR</option>
+          <option value="Transferencia">Transferencia</option>
+          <option value="Binance">Binance</option>
+        </select>
+
+        <label>Propina:</label>
+        <input
+          type="number"
+          value={propina}
+          onChange={e => setPropina(e.target.value)}
+          min="0"
+          step="0.01"
+          placeholder="0.00"
+        />
+
+        <button type="submit">Registrar Corte</button>
+      </form>
+
+      {/* Botones para elegir barbero y ver su historial */}
+      <div style={{ display: 'flex', gap: 8, margin: '1.5rem 0' }}>
+        {barberos.map(b => (
+          <button
+            key={b.id}
+            onClick={() => setSelectedBarberoId(b.id)}
+            style={{
+              padding: '0.5rem 1rem',
+              background: b.id === selectedBarberoId ? '#555' : '#777',
+              color: 'white',
+              border: 'none',
+              borderRadius: 4,
+              cursor: 'pointer'
+            }}
+          >
+            {b.nombre}
+          </button>
         ))}
-      </select>
+      </div>
 
-      <label htmlFor="servicio">Servicio:</label>
-      <select id="servicio" value={servicioSeleccionado} onChange={(e) => setServicioSeleccionado(e.target.value)} required>
-        <option value="">Seleccione un servicio</option>
-        {servicio.map((b) => (
-      <option key={b.id} value={b.name}>{b.name}</option>
-        ))}
-      </select>
-
-      <label htmlFor="estadoVenta">Estado de Venta:</label>
-      <select id="estadoVenta" value={estadoVentaSeleccionado} onChange={(e) => setEstadoVentaSeleccionado(e.target.value)} required>
-        <option value="">Seleccione el estado</option>
-            {estadoVenta.map((b) => (
-      <option key={b.id} value={b.estado}>{b.estado}</option>
-        ))}
-      </select>
-
-      <label htmlFor="metodoPago">Método de Pago:</label>
-      <select id="metodoPago" value={metodoPago} onChange={(e) => setMetodoPago(e.target.value)} required>
-        <option value="">Seleccione el método</option>
-
-        <option value="Efectivo">Efectivo</option>
-        <option value="Tarjeta">Tarjeta</option>
-        <option value="QR">QR</option>
-        <option value="Transferencia">Transferencia</option>
-        <option value="Binance">Binance</option>
-        
-      </select>
-
-      <label htmlFor="propina">Propina:</label>
-      <input
-        type="number"
-        id="propina"
-        value={propina}
-        onChange={(e) => setPropina(e.target.value)}
-        min="0"
-        step="0.01"
-        placeholder="0.00"
-      />
-
-      <button type="submit">Registrar Corte</button>
-    </form>
+      {/* Aquí mostramos estático los cortes agrupados por fecha */}
+      {selectedBarberoId && (
+        <CortesPorBarbero
+          cortes={cortes}
+          barberoId={selectedBarberoId}
+        />
+      )}
     </div>
-    </>
   );
 }

@@ -26,7 +26,7 @@ export function AdelantoModal({ onClose, onGuardar }) {
     }
 
     const adelanto = {
-      barbero,
+      employee_id: parseInt(barbero),
       monto: parseFloat(monto),
       motivo,
       fecha: new Date().toISOString(),

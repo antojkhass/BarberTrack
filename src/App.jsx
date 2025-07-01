@@ -1,7 +1,7 @@
 // App.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sidebar, CorteForm, AdelantoModal, HistorialAdelantos, InventarioProductos, ModalAgregarProducto, ModalEliminarProducto, ModalEditarProducto, VentasProductos, ResumenBarberos } from './components/index.js';
-import {postAdvance} from '../src/api.js'
+import { postAdvance, fetchServiceSales } from '../src/api.js';
 
 
 function App() {
@@ -11,6 +11,20 @@ function App() {
   const [productos, setProductos] = useState([]);
   const [mostrarModalEliminar, setMostrarModalEliminar] = useState(false);
   const [mostrarModalEditar, setMostrarModalEditar] = useState(false);
+  const [recargarAdelantos, setRecargarAdelantos] = useState(false);
+  const [barberoSeleccionado, setBarberoSeleccionado] = useState(null);
+  const [cortes, setCortes] = useState([]);
+
+
+
+  const recargarCortes = async () => {
+  const data = await fetchServiceSales();
+  setCortes(data);
+};
+
+useEffect(() => {
+  recargarCortes();
+}, []);
 
   const handleVistaChange = (nuevaVista) => {
     if (nuevaVista === "adelanto") {
@@ -41,11 +55,28 @@ function App() {
       <Sidebar onSelect={handleVistaChange} vistaActual={vista} />
 
       <div className="main-content">
-        {vista === "corte" && <CorteForm />}
+        {vista === "corte" && (
+  <>
+    {/* 1) El formulario */}
+    <CorteForm
+      barbero={barberoSeleccionado}
+      onBarberoChange={setBarberoSeleccionado}
+      onNuevoCorte={recargarCortes}
+    />
+
+    {/* 2) Justo debajo, el componente que muestra los cortes */}
+    {barberoSeleccionado && (
+      <CortesPorBarbero
+        cortes={cortes}
+        barberoId={barberoSeleccionado}
+      />
+    )}
+  </>
+)}
 
         {vista === "historial" && (
           <div className="container">
-          <HistorialAdelantos />
+          <HistorialAdelantos recargar={recargarAdelantos}/>
           </div>
         )}
 
@@ -100,9 +131,11 @@ function App() {
       {modalVisible && (
         <AdelantoModal
           onClose={() => setModalVisible(false)}
-          onGuardar={async(adelanto) => {
+          onGuardar={async (adelanto) => {
             try {
             await postAdvance(adelanto)
+            setRecargarAdelantos((prev) => !prev);
+
             console.log("Adelanto guardado:", adelanto);
           } catch (error){
             alert("Error al guardar el adelanto.");

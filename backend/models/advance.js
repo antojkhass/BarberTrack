@@ -1,6 +1,7 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../database");
 
+
 class Advance extends Model {}
 
 Advance.init(
@@ -24,5 +25,8 @@ Advance.init(
     modelName: "advance",
   }
 );
+
+
+
 
 module.exports = Advance;

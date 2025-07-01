@@ -1,17 +1,44 @@
 // HistorialAdelantos.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchAdvances, fetchEmployees } from '../api'
 
-export function HistorialAdelantos() {
+export function HistorialAdelantos({recargar}) {
+
   const [filtroDesde, setFiltroDesde] = useState("");
   const [filtroHasta, setFiltroHasta] = useState("");
-
   const [filtroBarbero, setFiltroBarbero] = useState("");
+  const [adelantos, setAdelantos] = useState([]);
+  const [barberos, setBarberos] = useState([]);
 
-  const adelantos = [
-    { id: 1, barbero: "Juan", monto: 3000, motivo: "Compra", fecha: "2025-05-10" },
-    { id: 2, barbero: "Pedro", monto: 2000, motivo: "Gastos", fecha: "2025-05-11" },
-    { id: 3, barbero: "Juan", monto: 1500, motivo: "Otro", fecha: "2025-05-12" },
-  ];
+useEffect(() => {
+  async function cargarAdelantos() {
+    const data = await fetchAdvances();
+    setAdelantos(data)
+    console.log("Adelantos cargados:", data);
+
+  }
+
+  cargarAdelantos();
+}, [recargar]);
+
+useEffect(() => {
+  async function cargarBarberos() {
+    const data = await fetchEmployees();
+    setBarberos(data)
+    
+  }
+
+  cargarBarberos();
+
+}, [])
+
+const handleResetFilters = () => {
+  setFiltroDesde("");    
+  setFiltroHasta("");
+  setFiltroBarbero("");
+};
+
+
 
 const today = new Date();
 const dayOfWeek = today.getDay(); // 0 (domingo) a 6 (sábado)
@@ -23,10 +50,25 @@ const sunday = new Date(monday);
 sunday.setDate(monday.getDate() + 6);
 sunday.setHours(23, 59, 59, 999);
 
+// Si el usuario puso una fecha “desde”, la uso; si no, cae en el lunes de la semana actual
+const desdeDate = filtroDesde
+  ? new Date(filtroDesde + "T00:00:00")
+  : monday;
+
+// Si el usuario puso una fecha “hasta”, la uso; si no, cae en el domingo de la semana actual
+const hastaDate = filtroHasta
+  ? new Date(filtroHasta + "T23:59:59")
+  : sunday;
+
+
 const filtrados = adelantos
   .filter((a) => {
-    const fechaAdelanto = new Date(a.fecha);
-    return fechaAdelanto >= monday && fechaAdelanto <= sunday;
+const fechaAdelanto = new Date(a.fecha + "T00:00:00");
+const barberoNombre = barberos.find(b => b.id === a.employee_id)?.nombre || "";
+return fechaAdelanto >= desdeDate &&
+       fechaAdelanto <= hastaDate &&
+       barberoNombre.toLowerCase().includes(filtroBarbero.toLowerCase())
+
   })
   .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
@@ -51,6 +93,7 @@ const filtrados = adelantos
   style={{ marginRight: "15px" }}
 />
 
+
     
         <input
           type="text"
@@ -59,6 +102,13 @@ const filtrados = adelantos
           onChange={(e) => setFiltroBarbero(e.target.value)}
         />
       </div>
+
+<button onClick={handleResetFilters} className="btn-reset">
+  Reiniciar filtros
+</button>
+
+
+<hr />
 
       <table id="historialTable">
         <thead>
@@ -73,8 +123,9 @@ const filtrados = adelantos
           {filtrados.length > 0 ? (
             filtrados.map((a) => (
               <tr key={a.id}>
-                <td>{a.barbero}</td>
-                <td>${a.monto}</td>
+                <td>  {
+                   barberos.find((b) => b.id === a.employee_id)?.nombre || "Sin nombre"  }</td>
+                <td>{a.monto}</td>
                 <td>{a.motivo}</td>
                 <td>{a.fecha}</td>
               </tr>
