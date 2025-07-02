@@ -69,11 +69,14 @@ export function CortesPorBarbero({ cortes, barberoId }) {
             <div className='container-detalles-cortes'>
             {abierto && (
               <ul style={{ marginTop: '0.5rem', paddingLeft: '1rem' }}>
-                {lista.map(c => (
+                {lista.map((c, idx) => (
                   <li key={c.id} style={{ marginBottom: '0.5rem' }}>
-                    <div>Hora: {new Date(c.createdAt).toLocaleTimeString()}</div>
+                    <strong>Corte {idx + 1}</strong>
+                    <div>Hora de Registro: {new Date(c.createdAt).toLocaleTimeString()}</div>
                     <div>Monto: ${c.total}</div>
                     <div>Servicio: {c.service.name}</div>
+                          <div>Estado: {c.estadoVenta?.estado || '–'}</div>
+      <div>Método de Pago: {c.paymentMethod}</div>
                     <div>Propina: ${c.propina}</div>
                   </li>
                 ))}

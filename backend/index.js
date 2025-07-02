@@ -27,10 +27,23 @@ app.use("/api/saleStatus", saleStatus);
 app.use("/api/serviceSale", serviceSale);
 
 
-// Probar conexión y sincronizar modelos
-require("./models"); // Esto importa models/index.js y ejecuta syncModels()
+// // Probar conexión y sincronizar modelos
+// require("./models"); // Esto importa models/index.js y ejecuta syncModels()
+const { sequelize } = require("./models");
 
-// Iniciar servidor
-app.listen(PORT, () => {
-  console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
+sequelize
+.sync({ alter: true })
+.then(() => {
+  console.log("✅ Tablas sincronizadas con la base de datos");
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor escuchando en http: //localhost:${PORT}`);
+  });
+})
+.catch((err) => {
+  console.error("❌ No se pudo sincronizar la base de datos:", err);
 });
+
+// // Iniciar servidor
+// app.listen(PORT, () => {
+//   console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
+// });

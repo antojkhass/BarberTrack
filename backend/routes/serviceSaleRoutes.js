@@ -7,6 +7,18 @@ const { ServiceSale, Employee, Service, SaleStatus } = require("../models");
 router.get("/", async (req, res) => {
   try {
     const ventas = await ServiceSale.findAll({
+      //   attributes: [
+      //   "id",
+      //   "employee_id",
+      //   "service_id",
+      //   "estado_id",
+      //   "paymentMethod",  
+      //   "propina",        
+      //   "total",
+      //   "fecha",
+      //   "createdAt",
+      //   "updatedAt"
+      // ],
       include: [
         { model: Employee },
         { model: Service },
