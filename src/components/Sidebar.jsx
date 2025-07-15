@@ -31,7 +31,7 @@ export function Sidebar({ onSelect, vistaActual }) {
       onClick={() => onSelect("resumen")}
       className={vistaActual === "resumen" ? "active" : ""}
     >
-      Resumen de Barberos
+      Gestion de Caja
     </button>
   </div>
   </div>

@@ -1,5 +1,8 @@
+// main.js
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
+// detectamos si estamos en dev con esta pequeña librería:
+const isDev = require('electron-is-dev');
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -11,7 +14,13 @@ function createWindow() {
     }
   });
 
-  win.loadFile('dist/index.html'); // archivo generado por Vite después de hacer `npm run build`
+  if (isDev) {
+    // Modo desarrollo: cargamos desde el servidor de Vite
+    win.loadURL('http://localhost:5173');
+  } else {
+    // Modo producción: cargamos los archivos estáticos
+    win.loadFile(path.join(__dirname, 'dist/index.html'));
+  }
 }
 
 app.whenReady().then(() => {

@@ -312,3 +312,23 @@ export async function postServiceSale(corte) {
   }
 }
 
+export async function deleteServiceSale(id) {
+  try {
+    await fetch(`${SERVICE_SALES_API_URL}/${id}`, { method: "DELETE" });
+  } catch (error) {
+    console.error("Error al eliminar el servicio:", error);
+  }
+}
+
+
+export async function updateServiceSale(id, datosActualizados) {
+  const res = await fetch(`${SERVICE_SALES_API_URL}/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(datosActualizados),
+  });
+  if (!res.ok) {
+    throw new Error("Error al actualizar el corte");
+  }
+  return res.json();  // devuelve el objeto actualizado si tu servidor lo retorna
+}

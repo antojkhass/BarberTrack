@@ -20,7 +20,7 @@ body {
 
 .container {
   max-width: 1200px;
-   margin: 10px 0 1px 220px; /* top right bottom left */
+   margin: 10px 0 1px 220px;
   padding: 20px;
   background-color: rgb(228, 228, 228);
   border-radius: 15px;
@@ -180,7 +180,7 @@ button.cerrar-btn:hover {
 }
 
 .modal {
-  display: none;
+  /* display: none; */
   position: fixed;
   z-index: 1000;
   left: 0;

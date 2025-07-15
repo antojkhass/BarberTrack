@@ -1,5 +1,5 @@
 // components/ModalEditarProducto.jsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "../index.css";
 
 export function ModalEditarProducto({ visible, onClose, productos, onEditar }) {
@@ -13,9 +13,8 @@ export function ModalEditarProducto({ visible, onClose, productos, onEditar }) {
     if (productoSeleccionado) {
       setNombre(productoSeleccionado.nombre);
       setCategoria(productoSeleccionado.categoria);
-      setPrecioCosto(productoSeleccionado.precioCosto);
-      setPrecioVenta(productoSeleccionado.precioVenta);
-      setStock(productoSeleccionado.stock);
+      setPrecioCosto(productoSeleccionado.precio_costo);
+      setPrecioVenta(productoSeleccionado.precio_venta);
     } else {
       setNombre("");
       setCategoria("");
@@ -32,8 +31,8 @@ export function ModalEditarProducto({ visible, onClose, productos, onEditar }) {
       ...productoSeleccionado,
       nombre,
       categoria,
-      precioCosto: parseFloat(precioCosto),
-      precioVenta: parseFloat(precioVenta),
+      precio_costo: parseFloat(precioCosto),
+      precio_venta: parseFloat(precioVenta),
     };
 
     onEditar(productoEditado);
@@ -103,4 +102,3 @@ export function ModalEditarProducto({ visible, onClose, productos, onEditar }) {
   );
 }
 
-// export default ModalEditarProducto;

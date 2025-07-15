@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
   try {
     const empleados = await Employee.findAll();
     res.status(200).json(empleados);
-  } catch (error) {
+  } catch  {
     res.status(500).json({ error: "Error al obtener empleados." });
   }
 });
@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
   try {
     const nuevoEmpleado = await Employee.create(req.body);
     res.status(201).json(nuevoEmpleado);
-  } catch (error) {
+  } catch  {
     res.status(400).json({ error: "Error al crear empleado." });
   }
 });
@@ -56,7 +56,7 @@ router.delete("/:id", async (req, res) => {
     const id = req.params.id;
     await Employee.destroy({ where: { id } });
     res.status(204).end();
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Error al eliminar empleado." });
   }
 });

@@ -1,43 +1,25 @@
-import { useState } from "react";
-import { ModalAgregarProducto } from "./ModalAgregarProducto";
+// components/InventarioProductos.jsx
+import { useEffect } from "react";
+import { fetchProducts } from "../api";
 
-export function InventarioProductos({ setMostrarModalProducto, setMostrarModalEliminar, setMostrarModalEditar  }) {
-  const [productos, setProductos] = useState([
-    {
-      id: 1,
-      nombre: "Cera para cabello",
-      categoria: "Peinado",
-      precioCosto: 500,
-      precioVenta: 1000,
-      stock: 2,
-    },
-    {
-      id: 2,
-      nombre: "Shampoo para barba",
-      categoria: "Barba",
-      precioCosto: 700,
-      precioVenta: 1400,
-      stock: 5,
-    },
-    {
-      id: 3,
-      nombre: "Máquina Wahl",
-      categoria: "Máquinas",
-      precioCosto: 15000,
-      precioVenta: 20000,
-      stock: 1,
-    },
-  ]);
+export function InventarioProductos({ productos,
+  setProductos, setMostrarModalEliminar, setMostrarModalEditar, setMostrarModalAgregar }) {
+    
+  // const [productos, setProductos] = useState([]);
 
-  const [mostrarModal, setMostrarModal] = useState(false);
+  useEffect(() => {
+    async function cargarProductos() {
+      try {
+        const productosDesdeDB = await fetchProducts();
+        setProductos(productosDesdeDB);
+      } catch (error) {
+        console.error("Error al cargar productos:", error);
+      }
+    }
 
-  const agregarProducto = (nuevoProducto) => {
-    const productoConId = {
-      ...nuevoProducto,
-      id: productos.length + 1,
-    };
-    setProductos([...productos, productoConId]);
-  };
+    cargarProductos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -57,14 +39,12 @@ export function InventarioProductos({ setMostrarModalProducto, setMostrarModalEl
           {productos.map((prod) => (
             <tr
               key={prod.id}
-              style={{
-                backgroundColor: prod.stock < 3 ? "#f8d7da" : "transparent",
-              }}
+              style={{ backgroundColor: prod.stock < 3 ? "#f8d7da" : "transparent" }}
             >
               <td>{prod.nombre}</td>
               <td>{prod.categoria}</td>
-              <td>${prod.precioCosto}</td>
-              <td>${prod.precioVenta}</td>
+              <td>${prod.precio_costo}</td>
+              <td>${prod.precio_venta}</td>
               <td>{prod.stock}</td>
             </tr>
           ))}
@@ -72,15 +52,95 @@ export function InventarioProductos({ setMostrarModalProducto, setMostrarModalEl
       </table>
 
       <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
-        <button
-          className="btn-confirmar"
-          onClick={() => setMostrarModalProducto(true)}>
+        <button className="btn-confirmar" onClick={() => setMostrarModalAgregar(true)}>
           Agregar Producto
         </button>
-        <button className="btn-confirmar" onClick={() => setMostrarModalEliminar(true)}>Eliminar Producto</button>
-        <button className="btn-confirmar" onClick={() => setMostrarModalEditar(true)}>Editar Producto</button>
+        <button className="btn-confirmar" onClick={() => setMostrarModalEliminar(true)}>
+          Eliminar Producto
+        </button>
+        <button className="btn-confirmar" onClick={() => setMostrarModalEditar(true)}>
+          Editar Producto
+        </button>
       </div>
     </>
   );
 }
+// import { useEffect, useState } from "react";
+// import { postProduct, fetchProducts } from "../api";
 
+// export function InventarioProductos({
+//   setMostrarModalEliminar,
+//   setMostrarModalEditar,
+//   setMostrarModalAgregar,
+// }) {
+//   const [productos, setProductos] = useState([]);
+
+//   useEffect(() => {
+//     async function cargarProductos() {
+//       try {
+//         const productosDesdeDB = await fetchProducts();
+//         setProductos(productosDesdeDB);
+//       } catch (error) {
+//         console.error("Error al cargar productos:", error);
+//       }
+//     }
+
+//     cargarProductos();
+//   }, []);
+
+//   // ✅ Agregá acá la función para guardar productos
+// const agregarProducto = async (nuevoProducto) => {
+//   try {
+//     const productoGuardado = await postProduct(nuevoProducto);
+//     setProductos((prev) => [...prev, productoGuardado]);
+//   } catch (error) {
+//     console.error("Error al guardar producto:", error);
+//   }
+// };
+
+//   return (
+//     <>
+//       <h1>Inventario de Productos</h1>
+
+//       <table id="historialTable">
+//         <thead>
+//           <tr>
+//             <th>Nombre</th>
+//             <th>Categoría</th>
+//             <th>Precio Costo</th>
+//             <th>Precio Venta</th>
+//             <th>Stock</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {productos.map((prod) => (
+//             <tr
+//               key={prod.id}
+//               style={{
+//                 backgroundColor: prod.stock < 3 ? "#f8d7da" : "transparent",
+//               }}
+//             >
+//               <td>{prod.nombre}</td>
+//               <td>{prod.categoria}</td>
+//               <td>${prod.precioCosto}</td>
+//               <td>${prod.precioVenta}</td>
+//               <td>{prod.stock}</td>
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+
+//       <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
+//         <button className="btn-confirmar" onClick={() => setMostrarModalAgregar(true)}>
+//           Agregar Producto
+//         </button>
+//         <button className="btn-confirmar" onClick={() => setMostrarModalEliminar(true)}>
+//           Eliminar Producto
+//         </button>
+//         <button className="btn-confirmar" onClick={() => setMostrarModalEditar(true)}>
+//           Editar Producto
+//         </button>
+//       </div>
+//     </>
+//   );
+// }

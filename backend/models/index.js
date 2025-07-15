@@ -4,7 +4,7 @@ const sequelize = require("../database");
 // Importar modelos
 const Employee = require("./employee");
 const Product = require("./product");
-const ProductSale = require("./productSale");
+const ProductSale = require("./productsale");
 const Advance = require("./advance");
 const Service = require("./service");
 const SaleStatus = require("./saleStatus");
@@ -29,6 +29,8 @@ ServiceSale.belongsTo(Employee, { foreignKey: "employee_id" });
 ServiceSale.belongsTo(Service, { foreignKey: "service_id" });
 ServiceSale.belongsTo(SaleStatus, { foreignKey: "estado_id", as: "estadoVenta" });
 
+ProductSale.belongsTo(Product);
+ProductSale.belongsTo(Employee);
 
 
 // Sincronización

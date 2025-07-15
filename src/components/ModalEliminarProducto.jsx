@@ -1,5 +1,5 @@
 // components/ModalEliminarProducto.jsx
-import React, { useState } from "react";
+import  { useState } from "react";
 import "../index.css";
 
 export function ModalEliminarProducto({ visible, onClose, productos, onEliminar }) {
@@ -35,13 +35,9 @@ export function ModalEliminarProducto({ visible, onClose, productos, onEliminar 
               </option>
             ))}
           </select>
-          <button type="submit" className="btn-confirmar">
-            Eliminar Producto
-          </button>
-        </form>
+          <button onClick={() => onEliminar(productos.id)}>Eliminar Producto</button>
+          </form>
       </div>
     </div>
   );
 }
-
-// export default ModalEliminarProducto;

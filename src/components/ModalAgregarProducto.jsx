@@ -1,6 +1,7 @@
 // components/ModalAgregarProducto.jsx
-import React, { useState } from "react";
-import "../index.css"; // Para asegurarte que tenga los mismos estilos globales
+import { useState } from "react";
+import "../index.css";
+// import "./AdelantoModal.css";
 
 export function ModalAgregarProducto({ visible, onClose, onAgregar }) {
   const [nombre, setNombre] = useState("");
@@ -81,5 +82,3 @@ export function ModalAgregarProducto({ visible, onClose, onAgregar }) {
     </div>
   );
 }
-
-// export default ModalAgregarProducto;

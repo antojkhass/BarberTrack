@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./AdelantoModal.css";
 import { fetchEmployees } from "../api";
+import Swal from 'sweetalert2';
 
 export function AdelantoModal({ onClose, onGuardar }) {
   const [barbero, setBarbero] = useState("");
@@ -23,6 +24,7 @@ export function AdelantoModal({ onClose, onGuardar }) {
     if (!barbero || !monto || !motivo) {
       alert("Por favor completá todos los campos.");
       return;
+
     }
 
     const adelanto = {
@@ -33,6 +35,12 @@ export function AdelantoModal({ onClose, onGuardar }) {
     };
 
     onGuardar(adelanto);
+    Swal.fire({
+  icon: 'success',
+  title: 'Adelanto registrado correctamente',
+  showConfirmButton: false,
+  timer: 1500
+});
     onClose();
   };
 
