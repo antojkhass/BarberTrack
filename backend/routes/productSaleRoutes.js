@@ -34,10 +34,32 @@ router.get("/:id", async (req, res) => {
 // Registrar una nueva venta de producto
 router.post("/", async (req, res) => {
   try {
-    const nuevaVenta = await ProductSale.create(req.body);
+    const { cantidad, total, fecha, productId, employeeId } = req.body;
+
+    const producto = await Product.findByPk(productId);
+    if (!producto) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
+
+    if (producto.stock < cantidad) {
+      return res.status(400).json({ message: "Stock insuficiente" });
+    }
+
+    const nuevaVenta = await ProductSale.create({
+      cantidad,
+      total,
+      fecha,
+      productId,
+      employeeId,
+    });
+
+    producto.stock -= cantidad;
+    await producto.save();
+
     res.status(201).json(nuevaVenta);
   } catch (error) {
-    res.status(400).json({ message: "Error al registrar la venta", error });
+    console.error("Error al registrar venta:", error);
+    res.status(500).json({ message: "Error al registrar la venta", error });
   }
 });
 

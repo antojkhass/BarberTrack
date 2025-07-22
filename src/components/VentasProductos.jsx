@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { fetchEmployees, fetchProducts, fetchSales, postSale } from "../api";
 
-export function VentasProductos({ productos, setProductos }) {
+export function VentasProductos({ productos, setProductos, cargarProductos }) {
   const [barbero, setBarbero] = useState("");
   const [producto, setProducto] = useState("");
   const [cantidad, setCantidad] = useState(1);
@@ -82,15 +82,18 @@ export function VentasProductos({ productos, setProductos }) {
 
     const nuevaVenta = {
       cantidad,
-      total: productoInfo.precioVenta * cantidad,
+      total: productoInfo.precio_venta * cantidad,
       fecha: new Date().toISOString().split("T")[0],
       productId: productoInfo.id,
       employeeId: barberoSeleccionado.id,
     };
 
     try {
+
+      
       await postSale(nuevaVenta);
 
+      await cargarProductos();
       // Refrescar ventas desde backend
       const ventasDesdeAPI = await fetchSales();
       setVentas(ventasDesdeAPI);
@@ -252,7 +255,7 @@ export function VentasProductos({ productos, setProductos }) {
                 <td>{v.employee?.nombre}</td>
                 <td>{v.product?.nombre}</td>
                 <td>{v.cantidad}</td>
-                <td>${v.total}</td>
+                <td>{v.total}</td>
               </tr>
             ))
           ) : (

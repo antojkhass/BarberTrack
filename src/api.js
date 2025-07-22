@@ -330,5 +330,6 @@ export async function updateServiceSale(id, datosActualizados) {
   if (!res.ok) {
     throw new Error("Error al actualizar el corte");
   }
-  return res.json();  // devuelve el objeto actualizado si tu servidor lo retorna
+  return res.json(); 
 }
+

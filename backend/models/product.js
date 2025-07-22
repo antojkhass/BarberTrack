@@ -25,6 +25,10 @@ Product.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    eliminado: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
   },
   {
     sequelize,

@@ -155,7 +155,7 @@ const handleEditarProducto = async (productoEditado) => {
             <VentasProductos 
             productos={productos} 
             setProductos={setProductos} 
-            
+            cargarProductos={cargarProductos}
             />
           </div>
         )}

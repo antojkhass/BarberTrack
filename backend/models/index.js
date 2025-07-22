@@ -9,28 +9,31 @@ const Advance = require("./advance");
 const Service = require("./service");
 const SaleStatus = require("./saleStatus");
 const ServiceSale = require("./serviceSale");
+const Movement = require("./movements");
 
 
 // Asociaciones (pueden comentarse si querés evitar relaciones por ahora)
+// Adelantos
 Employee.hasMany(Advance, { foreignKey: "employee_id" });
 Advance.belongsTo(Employee, { foreignKey: "employee_id" });
 
-Employee.hasMany(ProductSale, { foreignKey: "employee_id" });
-ProductSale.belongsTo(Employee, { foreignKey: "employee_id" });
+// Ventas de productos
+Product.hasMany(ProductSale, { foreignKey: "productId" });
+ProductSale.belongsTo(Product, { foreignKey: "productId" });
 
-Product.hasMany(ProductSale, { foreignKey: "product_id" });
-ProductSale.belongsTo(Product, { foreignKey: "product_id" });
+Employee.hasMany(ProductSale, { foreignKey: "employeeId" });
+ProductSale.belongsTo(Employee, { foreignKey: "employeeId" });
 
-ProductSale.belongsTo(SaleStatus, { foreignKey: 'estado_id', as: 'estadoVenta' });
 SaleStatus.hasMany(ProductSale, { foreignKey: 'estado_id' });
+ProductSale.belongsTo(SaleStatus, { foreignKey: 'estado_id', as: 'estadoVenta' });
 
-
+// Ventas de servicios
 ServiceSale.belongsTo(Employee, { foreignKey: "employee_id" });
 ServiceSale.belongsTo(Service, { foreignKey: "service_id" });
 ServiceSale.belongsTo(SaleStatus, { foreignKey: "estado_id", as: "estadoVenta" });
 
-ProductSale.belongsTo(Product);
-ProductSale.belongsTo(Employee);
+Product.hasMany(Movement, { foreignKey: "productId" });
+Movement.belongsTo(Product, { foreignKey: "productId" });
 
 
 // Sincronización
@@ -53,5 +56,6 @@ module.exports = {
   Advance,
   Service,
   SaleStatus,
-  ServiceSale
+  ServiceSale,
+  Movement
 };

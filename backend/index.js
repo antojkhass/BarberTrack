@@ -18,6 +18,8 @@ const productSaleRoutes = require("./routes/productSaleRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
 const saleStatus = require("./routes/saleStatusRoutes");
 const serviceSale = require("./routes/serviceSaleRoutes");
+const movementsRoutes = require("./routes/movementsRoutes");
+
 
 // Usar rutas
 app.use("/api/employees", employeeRoutes);
@@ -27,6 +29,7 @@ app.use("/api/productSale", productSaleRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/saleStatus", saleStatus);
 app.use("/api/serviceSale", serviceSale);
+app.use("/api/movements", movementsRoutes);
 
 
 
